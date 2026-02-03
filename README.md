@@ -14,11 +14,15 @@ This is a simple command-line **Todo Manager** written in Rust. It is designed t
 
 ### Functionality and examples
 
-- **Add a todo**
-  - **What it does**: Creates a new todo item with a title, timestamp, and unique ID.
-  - **Example**:
+- **Add a todo (or multiple todos)**
+  - **What it does**: Creates one or more new todo items, each with a title, timestamp, and unique ID. You can add multiple todos in a single command.
+  - **Examples**:
     ```bash
+    # Add a single todo
     todomanager add "Buy groceries"
+    
+    # Add multiple todos at once
+    todomanager add orange banana "build website" "clean room"
     ```
 
 - **List todos**

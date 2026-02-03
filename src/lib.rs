@@ -22,7 +22,7 @@ pub struct ConfigFile {
 
 pub struct Command {
     pub command: String,
-    pub arguments: String,
+    pub arguments: Vec<String>,
 }
 
 pub fn init() {
@@ -61,7 +61,7 @@ pub fn get_args() -> Command {
     let args: Vec<String> = std::env::args().collect();
 
     let command = args.get(1).unwrap_or(&"".to_string()).to_string();
-    let arguments = args.get(2).unwrap_or(&"".to_string()).to_string();
+    let arguments: Vec<String> = args.iter().skip(2).cloned().collect();
 
     Command { command, arguments }
 }
@@ -117,25 +117,31 @@ pub fn help() {
     println!("{help}");
 }
 
-pub fn add(title: String) {
-    if title.len() < 1 {
+pub fn add(titles: Vec<String>) {
+    if titles.is_empty() {
         println!("{}", "No title provided".red());
         return;
     }
 
     let mut todos = get_todo().unwrap();
 
-    let todo = Todo {
-        created_at: get_timestamp(),
-        title,
-        done: false,
-        id: get_id(),
-        updated_at: get_timestamp(),
-    };
+    for title in titles {
+        if title.trim().is_empty() {
+            continue;
+        }
+        
+        let todo = Todo {
+            created_at: get_timestamp(),
+            title: title.trim().to_string(),
+            done: false,
+            id: get_id(),
+            updated_at: get_timestamp(),
+        };
 
-    todos.push(todo);
+        todos.push(todo);
+    }
+
     save_todo(todos);
-
     list();
 }
 
@@ -190,7 +196,7 @@ pub fn list() {
 
 pub fn toggle(id: String) {
     let mut todos = get_todo().unwrap();
-    let id = id.parse::<u32>().unwrap_or(0);
+    let id = id.trim().parse::<u32>().unwrap_or(0);
 
     let exists = todos.iter().any(|todo| todo.id == id);
 
@@ -211,7 +217,7 @@ pub fn toggle(id: String) {
 }
 pub fn remove(id: String) {
     let mut todos = get_todo().unwrap();
-    let id = id.parse::<u32>().unwrap_or(0);
+    let id = id.trim().parse::<u32>().unwrap_or(0);
 
     let exists = todos.iter().any(|todo| todo.id == id);
 
