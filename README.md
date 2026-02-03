@@ -7,6 +7,8 @@ This is a simple command-line **Todo Manager** written in Rust. It is designed t
 - **Add todos**: Quickly add new tasks to your list.
 - **List todos**: View all your current tasks.
 - **Toggle completion**: Mark tasks as done or undo them.
+- **Done**: Mark task as done
+- **Undo**: mark task as undone
 - **Delete todos**: Remove tasks you no longer need.
 - **Sort todos**: Show pending tasks first and completed ones last.
 - **Reset list**: Clear all todos in one go.
@@ -32,14 +34,19 @@ This is a simple command-line **Todo Manager** written in Rust. It is designed t
     todomanager list
     ```
 
-- **Toggle a todo**
-  - **What it does**: Marks a todo as done if it is pending, or makes it pending again if it is done.
+- **Done a todo**
+  - **What it does**: Marks a todo as done if it is pending
   - **Example**:
     ```bash
-    todomanager toggle 42
-    ```
-    Here `42` is the ID shown in the list output.
+    todomanager done 42
 
+- **Undo a todo**
+  - **What it does**: Marks a todo as undone if it is done.
+  - **Example**:
+    ```bash
+    todomanager undo 42
+
+    ```
 - **Remove a todo**
   - **What it does**: Permanently deletes a todo by its ID.
   - **Example**:
