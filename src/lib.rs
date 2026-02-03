@@ -101,17 +101,19 @@ pub fn help() {
     Command   |  Description
     {}          Add a new todo
     {}         List all todos
-    {}       Mark and unmark a todo as done
-    {}       Delete a todo
+    {}         Mark a todo as completed
+    {}         Mark a todo as not completed
+    {}           Delete a todo
     {}         Sort todos (pending first, completed last)
     {}        Delete all todos
     ",
         "add".cyan(),
         "list".blue(),
-        "toggle".green(),
-        "remove".red(),
-        "sort".yellow(),
-        "reset".magenta()
+        "done".green(),
+        "undo".yellow(),
+        "rm".red(),
+        "sort".magenta(),
+        "reset".red()
     );
 
     println!("{help}");
@@ -129,7 +131,7 @@ pub fn add(titles: Vec<String>) {
         if title.trim().is_empty() {
             continue;
         }
-        
+
         let todo = Todo {
             created_at: get_timestamp(),
             title: title.trim().to_string(),
@@ -194,7 +196,7 @@ pub fn list() {
     print_list(todos);
 }
 
-pub fn toggle(id: String) {
+pub fn done(id: String) {
     let mut todos = get_todo().unwrap();
     let id = id.trim().parse::<u32>().unwrap_or(0);
 
@@ -207,7 +209,7 @@ pub fn toggle(id: String) {
 
     for todo in &mut todos {
         if todo.id == id {
-            todo.done = !todo.done;
+            todo.done = true;
             todo.updated_at = get_timestamp();
         }
     }
@@ -215,6 +217,29 @@ pub fn toggle(id: String) {
     save_todo(todos);
     list();
 }
+
+pub fn undo(id: String) {
+    let mut todos = get_todo().unwrap();
+    let id = id.trim().parse::<u32>().unwrap_or(0);
+
+    let exists = todos.iter().any(|todo| todo.id == id);
+
+    if !exists {
+        println!("{}", "todo not found".red());
+        return;
+    }
+
+    for todo in &mut todos {
+        if todo.id == id {
+            todo.done = false;
+            todo.updated_at = get_timestamp();
+        }
+    }
+
+    save_todo(todos);
+    list();
+}
+
 pub fn remove(id: String) {
     let mut todos = get_todo().unwrap();
     let id = id.trim().parse::<u32>().unwrap_or(0);
